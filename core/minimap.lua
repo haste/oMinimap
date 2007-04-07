@@ -31,7 +31,7 @@
 
 local name = "oMinimap"
 local G = getfenv(0)
-local addon = DongleStub('Dongle-Beta1'):New(name)
+local addon = DongleStub('Dongle-1.0-RC3'):New(name)
 local frames = {
 	["MinimapZoomIn"] = true,
 	["MinimapZoomOut"] = true,
