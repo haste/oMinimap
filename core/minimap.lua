@@ -29,9 +29,25 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------]]
 
+-- Global fluff
+function GetMinimapShape() return "SQUARE" end
+
+-- Local fluff
 local name = "oMinimap"
 local G = getfenv(0)
+
+-- Add-On fluff
 local addon = DongleStub('Dongle-1.0-RC3'):New(name)
+local defaults = {
+	profile = {
+		zone = "BOTTOM",
+		inline = true,
+	},
+}
+
+-- DB fluff
+local db = addon:InitializeDB("oMinimapDB", defaults, "profile")
+local profile = db.profile
 local frames = {
 	["MinimapZoomIn"] = true,
 	["MinimapZoomOut"] = true,
@@ -41,21 +57,76 @@ local frames = {
 	["MiniMapWorldMapButton"] = true,
 	["MinimapBorder"] = true,
 	["GameTimeFrame"] = true,
+	["MiniMapTrackingFrame"] = true,
 }
 
-function addon:Initialize()
-	local text = Minimap:CreateFontString(nil, "OVERLAY")
-	text:SetWidth(200)
-	text:SetHeight(12)
-	text:SetPoint("TOP", Minimap, "BOTTOM", 0, -5)
-	text:SetJustifyH("CENTER")
-	text:SetJustifyV("TOP")
-	text:SetFont("Fonts\\FRIZQT__.TTF",12,"OUTLINE")
-	self.Zone = text
+-- Slash fluff
+local slash = addon:InitializeSlashCommand("oMinimap Slash Commands", "oMinimap", "omm", "ominimap")
+slash:RegisterSlashHandler("|cff33ff99zone|r: Toggle the position of the zone text.", "zone", "zoneToggle")
+slash:RegisterSlashHandler("|cff33ff99inline|r: Toggle if the zone text should be inline or not.", "inline", "inlineToggle")
 
-	self:RegisterEvent("ZONE_CHANGED", "zoneChanged")
-	self:RegisterEvent("ZONE_CHANGED_INDOORS", "zoneChanged")
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "zoneChanged")
+-- Frame fluff
+local r, g, b = NORMAL_FONT_COLOR
+local setStyle = function(self)
+	local zone = self.zone
+	local inline = profile.inline
+	local zPoint, zMod, fPoint, fMod, fHeight = profile.zone
+
+	zMod = (zPoint == "TOP" and -1) or 1
+	fHeight = (inline and 149) or 169
+	fPoint = (zPoint == "TOP" and not inline and "BOTTOMLEFT") or "TOPLEFT"
+	fMod = (zPoint == "TOP" and not inline and -1) or 1
+
+	self:ClearAllPoints()
+	self:SetPoint(fPoint, Minimap, -5, 4 * fMod)
+
+	self:SetWidth(148)
+	self:SetHeight(fHeight)
+
+	self:SetFrameLevel(0)
+	self:SetFrameStrata"BACKGROUND"
+
+	self:SetBackdropBorderColor(0, 0, 0)
+	self:SetBackdropColor(0, 0, 0)
+	
+	zone:ClearAllPoints()
+	zone:SetPoint("LEFT", self, 5, 0)
+	zone:SetPoint("RIGHT", self, -5, 0)
+	zone:SetPoint(zPoint, self, 0, 9 * zMod)
+end
+
+function addon:Initialize()
+	local frame = CreateFrame("Frame", "oMinimapFrame", Minimap)
+	local zone = Minimap:CreateFontString(nil, "OVERLAY")
+
+	frame.zone = zone
+	frame.setStyle = setStyle
+
+	frame:SetBackdrop({
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
+		insets = {left = 4, right = 4, top = 4, bottom = 4},
+	})
+	frame:setStyle()
+
+	zone:SetJustifyV"TOP"
+	zone:SetJustifyH"CENTER"
+	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
+
+	self.Zone = zone
+
+	MinimapCluster:SetMovable(true)
+	Minimap:SetScript("OnMouseDown", function()
+		if(IsAltKeyDown()) then
+		MinimapCluster:ClearAllPoints()
+			MinimapCluster:StartMoving()
+		else
+			Minimap_OnClick()
+		end
+	end)
+	Minimap:SetScript("OnMouseUp", function()
+		MinimapCluster:StopMovingOrSizing()
+	end)
 end
 
 function addon:Enable()
@@ -63,27 +134,15 @@ function addon:Enable()
 	for frame in pairs(frames) do
 		G[frame]:Hide()
 	end
+	frames = nil
 
-	local frame = CreateFrame("Frame", "oMinimapFrame", Minimap)
-	frame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -5, 4)
+	self:RegisterEvent("ZONE_CHANGED", "zoneChanged")
+	self:RegisterEvent("ZONE_CHANGED_INDOORS", "zoneChanged")
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "zoneChanged")
 
-	frame:SetBackdrop({
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
-		insets = {left = 4, right = 4, top = 4, bottom = 4},
-	})
-	
-	frame:SetWidth(150)
-	frame:SetHeight(170)
-	frame:SetFrameLevel(0)
-	frame:SetFrameStrata("BACKGROUND")
-	frame:SetBackdropBorderColor(0, 0, 0)
-	frame:SetBackdropColor(0, 0, 0)
-	MiniMapMailFrame:UnregisterEvent("UPDATE_PENDING_MAIL")
-	Minimap:SetMaskTexture("Interface\\AddOns\\oMinimap\\texture\\Mask")
-	
-	Minimap:ClearAllPoints()
-	Minimap:SetPoint("TOPRIGHT", UIParent, -10, -10)
+	MiniMapTrackingFrame:UnregisterEvent"PLAYER_AURAS_CHANGED"
+	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
+	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
 end
 
 function addon:Disable()
@@ -91,7 +150,8 @@ function addon:Disable()
 		G[frame]:Show()
 	end
 
-	MiniMapMailFrame:RegisterEvent("UPDATE_PENDING_MAIL")
+	MiniMapTrackingFrame:RegisterEvent"PLAYER_AURAS_CHANGED"
+	MiniMapMailFrame:RegisterEvent"UPDATE_PENDING_MAIL"
 end
 
 function addon:zoneChanged()
@@ -111,8 +171,21 @@ function addon:zoneChanged()
 	elseif (type == "contested") then
 		zone:SetTextColor(1, .7, 0)
 	else
-		zone:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+		zone:SetTextColor(r, g, b)
 	end
+end
+
+function addon:zoneToggle()
+	if(profile.zone == "TOP") then profile.zone = "BOTTOM"
+	else profile.zone = "TOP" end
+
+	oMinimapFrame:setStyle()
+end
+
+function addon:inlineToggle()
+	profile.inline = not profile.inline
+
+	oMinimapFrame:setStyle()
 end
 
 G[name] = addon
