@@ -41,12 +41,14 @@ local addon = DongleStub('Dongle-1.0-RC3'):New(name)
 local defaults = {
 	profile = {
 		zone = "BOTTOM",
+		zvis = false,
 		inline = true,
 	},
 }
 
 -- DB fluff
 local db = addon:InitializeDB("oMinimapDB", defaults, "profile")
+addon.db =db
 local profile = db.profile
 local frames = {
 	["MinimapZoomIn"] = true,
@@ -62,7 +64,8 @@ local frames = {
 
 -- Slash fluff
 local slash = addon:InitializeSlashCommand("oMinimap Slash Commands", "oMinimap", "omm", "ominimap")
-slash:RegisterSlashHandler("|cff33ff99zone|r: Toggle the position of the zone text.", "zone", "zoneToggle")
+slash:RegisterSlashHandler("|cff33ff99zpos|r: Toggle the position of the zone text.", "zpos", "zoneToggle")
+slash:RegisterSlashHandler("|cff33ff99zvis|r: Toggle the visibility of the zone text.", "zvis", "zoneVisibility")
 slash:RegisterSlashHandler("|cff33ff99inline|r: Toggle if the zone text should be inline or not.", "inline", "inlineToggle")
 
 -- Frame fluff
@@ -93,6 +96,9 @@ local setStyle = function(self)
 	zone:SetPoint("LEFT", self, 5, 0)
 	zone:SetPoint("RIGHT", self, -5, 0)
 	zone:SetPoint(zPoint, self, 0, 9 * zMod)
+
+	if(profile.zvis) then zone:Hide()
+	else zone:Show() end
 end
 
 function addon:Initialize()
@@ -178,6 +184,12 @@ end
 function addon:zoneToggle()
 	if(profile.zone == "TOP") then profile.zone = "BOTTOM"
 	else profile.zone = "TOP" end
+
+	oMinimapFrame:setStyle()
+end
+
+function addon:zoneVisibility()
+	profile.zvis = not profile.zvis
 
 	oMinimapFrame:setStyle()
 end
