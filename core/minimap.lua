@@ -69,7 +69,7 @@ slash:RegisterSlashHandler("|cff33ff99zvis|r: Toggle the visibility of the zone 
 slash:RegisterSlashHandler("|cff33ff99inline|r: Toggle if the zone text should be inline or not.", "inline", "inlineToggle")
 
 -- Frame fluff
-local r, g, b = NORMAL_FONT_COLOR
+local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
 local setStyle = function(self)
 	local zone = self.zone
 	local inline = profile.inline
