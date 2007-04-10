@@ -145,6 +145,7 @@ function addon:Enable()
 	self:RegisterEvent("ZONE_CHANGED", "zoneChanged")
 	self:RegisterEvent("ZONE_CHANGED_INDOORS", "zoneChanged")
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "zoneChanged")
+	self:RegisterEvent("CVAR_UPDATE", "updateMask")
 
 	MiniMapTrackingFrame:UnregisterEvent"PLAYER_AURAS_CHANGED"
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
@@ -179,6 +180,10 @@ function addon:zoneChanged()
 	else
 		zone:SetTextColor(r, g, b)
 	end
+end
+
+function addon:updateMask(event, cvar, state)
+	if(cvar == "WINDOWED_MODE") then Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask" end
 end
 
 function addon:zoneToggle()
