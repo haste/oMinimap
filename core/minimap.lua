@@ -48,13 +48,11 @@ local defaults = {
 
 -- DB fluff
 local db = addon:InitializeDB("oMinimapDB", defaults, "profile")
-addon.db =db
 local profile = db.profile
 local frames = {
 	["MinimapZoomIn"] = true,
 	["MinimapZoomOut"] = true,
 	["MinimapToggleButton"] = true,
-	["MinimapZoneTextButton"] = true,
 	["MinimapBorderTop"] = true,
 	["MiniMapWorldMapButton"] = true,
 	["MinimapBorder"] = true,
@@ -101,9 +99,9 @@ local setStyle = function(self)
 	else zone:Show() end
 end
 
-function addon:Initialize()
+function addon:Enable()
 	local frame = CreateFrame("Frame", "oMinimapFrame", Minimap)
-	local zone = Minimap:CreateFontString(nil, "OVERLAY")
+	local zone = MinimapZoneText
 
 	frame.zone = zone
 	frame.setStyle = setStyle
@@ -115,16 +113,13 @@ function addon:Initialize()
 	})
 	frame:setStyle()
 
-	zone:SetJustifyV"TOP"
-	zone:SetJustifyH"CENTER"
 	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
-
-	self.Zone = zone
+	zone:SetDrawLayer"OVERLAY"
 
 	MinimapCluster:SetMovable(true)
 	Minimap:SetScript("OnMouseDown", function()
 		if(IsAltKeyDown()) then
-		MinimapCluster:ClearAllPoints()
+			MinimapCluster:ClearAllPoints()
 			MinimapCluster:StartMoving()
 		else
 			Minimap_OnClick()
@@ -133,19 +128,11 @@ function addon:Initialize()
 	Minimap:SetScript("OnMouseUp", function()
 		MinimapCluster:StopMovingOrSizing()
 	end)
-end
 
-function addon:Enable()
-	self:zoneChanged()
 	for frame in pairs(frames) do
 		G[frame]:Hide()
 	end
 	frames = nil
-
-	self:RegisterEvent("ZONE_CHANGED", "zoneChanged")
-	self:RegisterEvent("ZONE_CHANGED_INDOORS", "zoneChanged")
-	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "zoneChanged")
-	self:RegisterEvent("CVAR_UPDATE", "updateMask")
 
 	MiniMapTrackingFrame:UnregisterEvent"PLAYER_AURAS_CHANGED"
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
@@ -159,31 +146,6 @@ function addon:Disable()
 
 	MiniMapTrackingFrame:RegisterEvent"PLAYER_AURAS_CHANGED"
 	MiniMapMailFrame:RegisterEvent"UPDATE_PENDING_MAIL"
-end
-
-function addon:zoneChanged()
-	local zone = self.Zone
-
-	zone:SetText(GetMinimapZoneText())
-
-	local type = GetZonePVPInfo()
-	if (type == "sanctuary") then
-		zone:SetTextColor(.41, .8, .94)
-	elseif (type == "arena") then
-		zone:SetTextColor(1, .1, .1)
-	elseif (type == "friendly") then
-		zone:SetTextColor(.1, 1, .1)
-	elseif (type == "hostile") then
-		zone:SetTextColor(1, .1, .1)
-	elseif (type == "contested") then
-		zone:SetTextColor(1, .7, 0)
-	else
-		zone:SetTextColor(r, g, b)
-	end
-end
-
-function addon:updateMask(event, cvar, state)
-	if(cvar == "WINDOWED_MODE") then Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask" end
 end
 
 function addon:zoneToggle()
