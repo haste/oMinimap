@@ -37,7 +37,7 @@ local name = "oMinimap"
 local G = getfenv(0)
 
 -- Add-On fluff
-local addon = DongleStub('Dongle-1.0-RC3'):New(name)
+local addon = DongleStub('Dongle-1.0'):New(name)
 local defaults = {
 	profile = {
 		zone = "BOTTOM",
@@ -81,7 +81,7 @@ local setStyle = function(self)
 	self:ClearAllPoints()
 	self:SetPoint(fPoint, Minimap, -5, 4 * fMod)
 
-	self:SetWidth(148)
+	self:SetWidth(149)
 	self:SetHeight(fHeight)
 
 	self:SetFrameLevel(0)

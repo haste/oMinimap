@@ -7,6 +7,6 @@
 ## SavedVariables: oMinimapDB
 ## OptionalDeps: Dongle
 
-libs\Dongle.lua
+Dongle.lua
 
 core\minimap.lua
