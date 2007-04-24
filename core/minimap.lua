@@ -60,6 +60,18 @@ local frames = {
 	["MiniMapTrackingFrame"] = true,
 }
 
+local backdrops = {
+	['shade'] = {
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		insets = {left = 6, right = 1, top = 6, bottom = 1},
+	},
+	['black'] = {
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
+		insets = {left = 4, right = 4, top = 4, bottom = 4},
+	},
+}
+
 -- Slash fluff
 local slash = addon:InitializeSlashCommand("oMinimap Slash Commands", "oMinimap", "omm", "ominimap")
 slash:RegisterSlashHandler("|cff33ff99zpos|r: Toggle the position of the zone text.", "zpos", "zoneToggle")
@@ -87,8 +99,9 @@ local setStyle = function(self)
 	self:SetFrameLevel(0)
 	self:SetFrameStrata"BACKGROUND"
 
-	self:SetBackdropBorderColor(0, 0, 0)
-	self:SetBackdropColor(0, 0, 0)
+	self:SetBackdropColor(0, 0, 0, .4)
+	--self:SetBackdropBorderColor(0, 0, 0)
+	--self:SetBackdropColor(0, 0, 0)
 	
 	zone:ClearAllPoints()
 	zone:SetPoint("LEFT", self, 5, 0)
@@ -106,11 +119,7 @@ function addon:Enable()
 	frame.zone = zone
 	frame.setStyle = setStyle
 
-	frame:SetBackdrop({
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
-		insets = {left = 4, right = 4, top = 4, bottom = 4},
-	})
+	frame:SetBackdrop(backdrops.shade)
 	frame:setStyle()
 
 	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
