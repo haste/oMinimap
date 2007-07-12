@@ -101,4 +101,4 @@ local event = function(self)
 end
 
 addon:SetScript("OnEvent", event)
-addon:RegisterEvent"PLAYER_ENTERING_WORLD"
+addon:RegisterEvent"PLAYER_LOGIN"
