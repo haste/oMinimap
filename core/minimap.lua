@@ -32,23 +32,8 @@
 -- Global fluff
 function GetMinimapShape() return "SQUARE" end
 
--- Local fluff
-local name = "oMinimap"
-local G = getfenv(0)
-
 -- Add-On fluff
-local addon = DongleStub('Dongle-1.0'):New(name)
-local defaults = {
-	profile = {
-		zone = "BOTTOM",
-		zvis = false,
-		inline = true,
-	},
-}
-
--- DB fluff
-local db = addon:InitializeDB("oMinimapDB", defaults, "profile")
-local profile = db.profile
+local addon = CreateFrame("Frame", nil, Minimap)
 local frames = {
 	["MinimapZoomIn"] = true,
 	["MinimapZoomOut"] = true,
@@ -60,67 +45,15 @@ local frames = {
 	["MiniMapTrackingFrame"] = true,
 }
 
-local backdrops = {
-	['shade'] = {
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		insets = {left = 6, right = 1, top = 6, bottom = 1},
-	},
-	['black'] = {
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
-		insets = {left = 4, right = 4, top = 4, bottom = 4},
-	},
-}
-
--- Slash fluff
-local slash = addon:InitializeSlashCommand("oMinimap Slash Commands", "oMinimap", "omm", "ominimap")
-slash:RegisterSlashHandler("|cff33ff99zpos|r: Toggle the position of the zone text.", "zpos", "zoneToggle")
-slash:RegisterSlashHandler("|cff33ff99zvis|r: Toggle the visibility of the zone text.", "zvis", "zoneVisibility")
-slash:RegisterSlashHandler("|cff33ff99inline|r: Toggle if the zone text should be inline or not.", "inline", "inlineToggle")
-
 -- Frame fluff
 local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
-local setStyle = function(self)
-	local zone = self.zone
-	local inline = profile.inline
-	local zPoint, zMod, fPoint, fMod, fHeight = profile.zone
-
-	zMod = (zPoint == "TOP" and -1) or 1
-	fHeight = (inline and 149) or 169
-	fPoint = (zPoint == "TOP" and not inline and "BOTTOMLEFT") or "TOPLEFT"
-	fMod = (zPoint == "TOP" and not inline and -1) or 1
-
-	self:ClearAllPoints()
-	self:SetPoint(fPoint, Minimap, -5, 4 * fMod)
-
-	self:SetWidth(149)
-	self:SetHeight(fHeight)
-
-	self:SetFrameLevel(0)
-	self:SetFrameStrata"BACKGROUND"
-
-	self:SetBackdropColor(0, 0, 0, .4)
-	--self:SetBackdropBorderColor(0, 0, 0)
-	--self:SetBackdropColor(0, 0, 0)
-	
-	zone:ClearAllPoints()
-	zone:SetPoint("LEFT", self, 5, 0)
-	zone:SetPoint("RIGHT", self, -5, 0)
-	zone:SetPoint(zPoint, self, 0, 9 * zMod)
-
-	if(profile.zvis) then zone:Hide()
-	else zone:Show() end
-end
-
-function addon:Enable()
-	local frame = CreateFrame("Frame", "oMinimapFrame", Minimap)
+local event = function(self)
 	local zone = MinimapZoneText
 
-	frame.zone = zone
-	frame.setStyle = setStyle
-
-	frame:SetBackdrop(backdrops.shade)
-	frame:setStyle()
+	self:SetBackdrop{
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		insets = {left = 6, right = 1, top = 6, bottom = 1},
+	}
 
 	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
 	zone:SetDrawLayer"OVERLAY"
@@ -138,42 +71,34 @@ function addon:Enable()
 		MinimapCluster:StopMovingOrSizing()
 	end)
 
-	for frame in pairs(frames) do
-		G[frame]:Hide()
-	end
-	frames = nil
-
 	MiniMapTrackingFrame:UnregisterEvent"PLAYER_AURAS_CHANGED"
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
 	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
-end
 
-function addon:Disable()
+	self:ClearAllPoints()
+	self:SetPoint("TOPLEFT", Minimap, -5, 4)
+
+	self:SetWidth(149)
+	self:SetHeight(149)
+
+	self:SetFrameLevel(0)
+	self:SetFrameStrata"BACKGROUND"
+
+	self:SetBackdropColor(0, 0, 0, .4)
+	
+	zone:ClearAllPoints()
+	zone:SetPoint("LEFT", self, 5, 0)
+	zone:SetPoint("RIGHT", self, -5, 0)
+	zone:SetPoint("BOTTOM", self, 0, 9)
+	
+	local font, size, outline = zone:GetFont()
+	zone:SetFont(font, 11, outline)
+
 	for frame in pairs(frames) do
-		G[frame]:Show()
+		_G[frame]:Hide()
 	end
-
-	MiniMapTrackingFrame:RegisterEvent"PLAYER_AURAS_CHANGED"
-	MiniMapMailFrame:RegisterEvent"UPDATE_PENDING_MAIL"
+	frames = nil
 end
 
-function addon:zoneToggle()
-	if(profile.zone == "TOP") then profile.zone = "BOTTOM"
-	else profile.zone = "TOP" end
-
-	oMinimapFrame:setStyle()
-end
-
-function addon:zoneVisibility()
-	profile.zvis = not profile.zvis
-
-	oMinimapFrame:setStyle()
-end
-
-function addon:inlineToggle()
-	profile.inline = not profile.inline
-
-	oMinimapFrame:setStyle()
-end
-
-G[name] = addon
+addon:SetScript("OnEvent", event)
+addon:RegisterEvent"PLAYER_ENTERING_WORLD"
