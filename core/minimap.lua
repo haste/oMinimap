@@ -31,9 +31,8 @@
 
 -- Global fluff
 function GetMinimapShape() return "SQUARE" end
-
 -- Add-On fluff
-local addon = CreateFrame("Frame", nil, Minimap)
+local addon = CreateFrame("Frame", "oMinimap", Minimap)
 local frames = {
 	["MinimapZoomIn"] = true,
 	["MinimapZoomOut"] = true,
@@ -44,6 +43,10 @@ local frames = {
 	["GameTimeFrame"] = true,
 	["MiniMapTrackingFrame"] = true,
 }
+
+-- We have to do this here
+MinimapCluster:SetMovable(true)
+MinimapCluster:SetUserPlaced(true)
 
 -- Frame fluff
 local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
@@ -58,7 +61,6 @@ local event = function(self)
 	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
 	zone:SetDrawLayer"OVERLAY"
 
-	MinimapCluster:SetMovable(true)
 	Minimap:SetScript("OnMouseDown", function()
 		if(IsAltKeyDown()) then
 			MinimapCluster:ClearAllPoints()
