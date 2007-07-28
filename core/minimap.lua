@@ -34,14 +34,14 @@ function GetMinimapShape() return "SQUARE" end
 -- Add-On fluff
 local addon = CreateFrame("Frame", "oMinimap", Minimap)
 local frames = {
-	["MinimapZoomIn"] = true,
-	["MinimapZoomOut"] = true,
-	["MinimapToggleButton"] = true,
-	["MinimapBorderTop"] = true,
-	["MiniMapWorldMapButton"] = true,
-	["MinimapBorder"] = true,
-	["GameTimeFrame"] = true,
-	["MiniMapTrackingFrame"] = true,
+	MinimapZoomIn,
+	MinimapZoomOut,
+	MinimapToggleButton,
+	MinimapBorderTop,
+	MiniMapWorldMapButton,
+	MinimapBorder,
+	GameTimeFrame,
+	MiniMapTrackingFrame,
 }
 
 -- We have to do this here
@@ -96,8 +96,8 @@ local event = function(self)
 	local font, size, outline = zone:GetFont()
 	zone:SetFont(font, 11, outline)
 
-	for frame in pairs(frames) do
-		_G[frame]:Hide()
+	for _, frame in pairs(frames) do
+		frame:Hide()
 	end
 	frames = nil
 end
