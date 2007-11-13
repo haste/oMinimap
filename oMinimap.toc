@@ -1,4 +1,4 @@
-## Interface: 20100
+## Interface: 20300
 ## Title: oMinimap
 ## Author: Haste
 ## X-eMail: troeks@gmail.com

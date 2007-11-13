@@ -41,7 +41,6 @@ local frames = {
 	MiniMapWorldMapButton,
 	MinimapBorder,
 	GameTimeFrame,
-	MiniMapTrackingFrame,
 }
 
 -- We have to do this here
@@ -73,7 +72,6 @@ local event = function(self)
 		MinimapCluster:StopMovingOrSizing()
 	end)
 
-	MiniMapTrackingFrame:UnregisterEvent"PLAYER_AURAS_CHANGED"
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
 	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
 
