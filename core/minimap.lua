@@ -72,6 +72,12 @@ local event = function(self)
 		MinimapCluster:StopMovingOrSizing()
 	end)
 
+	MiniMapTrackingBorder:Hide()
+	MiniMapTrackingBackground:Hide()
+	MiniMapTracking:SetParent(Minimap)
+	MiniMapTracking:ClearAllPoints()
+	MiniMapTracking:SetPoint("TOPLEFT")
+
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
 	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
 
