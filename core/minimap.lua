@@ -76,7 +76,12 @@ local event = function(self)
 	MiniMapTrackingBackground:Hide()
 	MiniMapTracking:SetParent(Minimap)
 	MiniMapTracking:ClearAllPoints()
-	MiniMapTracking:SetPoint("TOPLEFT")
+	MiniMapTracking:SetPoint"TOPLEFT"
+
+	MiniMapBattlefieldBorder:Hide()
+	MiniMapBattlefieldFrame:SetParent(Minimap)
+	MiniMapBattlefieldFrame:ClearAllPoints()
+	MiniMapBattlefieldFrame:SetPoint("TOPRIGHT", 0, -3)
 
 	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
 	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
