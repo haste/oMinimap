@@ -71,6 +71,15 @@ local event = function(self)
 	Minimap:SetScript("OnMouseUp", function()
 		MinimapCluster:StopMovingOrSizing()
 	end)
+	Minimap:EnableMouserWheel(true)
+	Minimap:SetScript("OnMouseWheel", function(self, z)
+		local c = Minimap:GetZoom()
+		if(zoom > 0 and c < 5) then
+			Minimap:SetZoom(c + 1)
+		elseif(z < 0 and c > 0) then
+			Minimap:SetZoom(c - 1)
+		end
+	end)
 
 	MiniMapTrackingBorder:Hide()
 	MiniMapTrackingBackground:Hide()
@@ -96,12 +105,12 @@ local event = function(self)
 	self:SetFrameStrata"BACKGROUND"
 
 	self:SetBackdropColor(0, 0, 0, .4)
-	
+
 	zone:ClearAllPoints()
 	zone:SetPoint("LEFT", self, 5, 0)
 	zone:SetPoint("RIGHT", self, -5, 0)
 	zone:SetPoint("BOTTOM", self, 0, 9)
-	
+
 	local font, size, outline = zone:GetFont()
 	zone:SetFont(font, 11, outline)
 
