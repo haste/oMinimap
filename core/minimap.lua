@@ -71,7 +71,7 @@ local event = function(self)
 	Minimap:SetScript("OnMouseUp", function()
 		MinimapCluster:StopMovingOrSizing()
 	end)
-	Minimap:EnableMouserWheel(true)
+	Minimap:EnableMouseWheel(true)
 	Minimap:SetScript("OnMouseWheel", function(self, z)
 		local c = Minimap:GetZoom()
 		if(zoom > 0 and c < 5) then
