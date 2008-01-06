@@ -92,7 +92,13 @@ local event = function(self)
 	MiniMapBattlefieldFrame:ClearAllPoints()
 	MiniMapBattlefieldFrame:SetPoint("TOPRIGHT", 0, -3)
 
-	MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
+	MiniMapMailBorder:Hide()
+	MiniMapMailFrame:SetParent(Minimap)
+	MiniMapMailFrame:ClearAllPoints()
+	MiniMapMailFrame:SetPoint"TOP"
+	MiniMapMailIcon:SetTexture"Interface\\AddOns\\oMinimap\\texture\\mail"
+
+	MinimapNorthTag:Hide()
 	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
 
 	self:ClearAllPoints()
