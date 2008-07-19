@@ -1,10 +1,7 @@
-## Interface: 20300
+## Interface: 20400
 ## Title: oMinimap
 ## Author: Haste
 ## X-eMail: troeks@gmail.com
-## X-Website: http://fuxsake.net
 ## Notes: Yet another square minimap.
-## SavedVariables: oMinimapDB
-## OptionalDeps: Dongle
 
 core\minimap.lua
