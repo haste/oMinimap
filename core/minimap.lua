@@ -48,17 +48,14 @@ MinimapCluster:SetMovable(true)
 MinimapCluster:SetUserPlaced(true)
 
 -- Frame fluff
-local r, g, b = NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b
 local event = function(self)
-	local zone = MinimapZoneText
-
 	self:SetBackdrop{
 		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
 		insets = {left = 6, right = 1, top = 6, bottom = 1},
 	}
 
-	zone:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
-	zone:SetDrawLayer"OVERLAY"
+	MinimapZoneText:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
+	MinimapZoneText:SetDrawLayer"OVERLAY"
 
 	Minimap:SetScript("OnMouseDown", function()
 		if(IsAltKeyDown()) then
@@ -81,6 +78,8 @@ local event = function(self)
 		end
 	end)
 
+	MiniMapTrackingIcon:SetTexCoord(.07, .93, .07, .93)
+	MiniMapTracking:SetScale(.85)
 	MiniMapTrackingBorder:Hide()
 	MiniMapTrackingBackground:Hide()
 	MiniMapTracking:SetParent(Minimap)
@@ -112,13 +111,13 @@ local event = function(self)
 
 	self:SetBackdropColor(0, 0, 0, .4)
 
-	zone:ClearAllPoints()
-	zone:SetPoint("LEFT", self, 5, 0)
-	zone:SetPoint("RIGHT", self, -5, 0)
-	zone:SetPoint("BOTTOM", self, 0, 9)
+	MinimapZoneTextButton:ClearAllPoints()
+	MinimapZoneTextButton:SetPoint("LEFT", self, 5, 0)
+	MinimapZoneTextButton:SetPoint("RIGHT", self, -5, 0)
+	MinimapZoneTextButton:SetPoint("BOTTOM", self, 0, 9)
 
-	local font, size, outline = zone:GetFont()
-	zone:SetFont(font, 11, outline)
+	local font, size, outline = MinimapZoneText:GetFont()
+	MinimapZoneText:SetFont(font, 11, outline)
 
 	for _, frame in pairs(frames) do
 		frame:Hide()
