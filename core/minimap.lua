@@ -80,7 +80,7 @@ local event = function(self)
 
 	MiniMapTrackingIcon:SetTexCoord(.07, .93, .07, .93)
 	MiniMapTracking:SetScale(.85)
-	MiniMapTrackingBorder:Hide()
+	MiniMapTrackingButtonBorder:Hide()
 	MiniMapTrackingBackground:Hide()
 	MiniMapTracking:SetParent(Minimap)
 	MiniMapTracking:ClearAllPoints()
