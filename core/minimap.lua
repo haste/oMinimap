@@ -49,11 +49,6 @@ MinimapCluster:SetUserPlaced(true)
 
 -- Frame fluff
 local event = function(self)
-	self:SetBackdrop{
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
-		insets = {left = 6, right = 1, top = 6, bottom = 1},
-	}
-
 	MinimapZoneText:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
 	MinimapZoneText:SetDrawLayer"OVERLAY"
 
