@@ -57,12 +57,12 @@ local event = function(self)
 	MinimapZoneText:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
 	MinimapZoneText:SetDrawLayer"OVERLAY"
 
-	Minimap:SetScript("OnMouseDown", function()
+	Minimap:SetScript("OnMouseDown", function(self)
 		if(IsAltKeyDown()) then
 			MinimapCluster:ClearAllPoints()
 			MinimapCluster:StartMoving()
 		else
-			Minimap_OnClick()
+			Minimap_OnClick(self)
 		end
 	end)
 	Minimap:SetScript("OnMouseUp", function()
