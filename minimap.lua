@@ -12,6 +12,8 @@ local frames = {
 	GameTimeFrame,
 }
 
+local dummy = function() end
+
 -- We have to do this here
 MinimapCluster:SetMovable(true)
 MinimapCluster:SetUserPlaced(true)
@@ -62,6 +64,8 @@ local event = function(self)
 	MiniMapMailIcon:SetTexture[[Interface\AddOns\oMinimap\textures\mail]]
 
 	MinimapNorthTag:Hide()
+	MinimapNorthTag.Show = dummy
+
 	Minimap:SetMaskTexture[[Interface\ChatFrame\ChatFrameBackground]]
 
 	self:ClearAllPoints()
