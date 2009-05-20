@@ -66,6 +66,7 @@ local event = function(self)
 	MinimapNorthTag:Hide()
 	MinimapNorthTag.Show = dummy
 
+	Minimap:SetBlipTexture[[Interface\AddOns\oMinimap\textures\chiiblip]]
 	Minimap:SetMaskTexture[[Interface\ChatFrame\ChatFrameBackground]]
 
 	self:ClearAllPoints()
