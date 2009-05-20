@@ -59,7 +59,7 @@ local event = function(self)
 	MiniMapMailFrame:SetParent(Minimap)
 	MiniMapMailFrame:ClearAllPoints()
 	MiniMapMailFrame:SetPoint"TOP"
-	MiniMapMailIcon:SetTexture"Interface\\AddOns\\oMinimap\\texture\\mail"
+	MiniMapMailIcon:SetTexture[[Interface\AddOns\oMinimap\textures\mail]]
 
 	MinimapNorthTag:Hide()
 	Minimap:SetMaskTexture[[Interface\ChatFrame\ChatFrameBackground]]
