@@ -62,7 +62,7 @@ local event = function(self)
 	MiniMapMailIcon:SetTexture"Interface\\AddOns\\oMinimap\\texture\\mail"
 
 	MinimapNorthTag:Hide()
-	Minimap:SetMaskTexture"Interface\\AddOns\\oMinimap\\texture\\Mask"
+	Minimap:SetMaskTexture[[Interface\ChatFrame\ChatFrameBackground]]
 
 	self:ClearAllPoints()
 	self:SetPoint("TOPLEFT", Minimap, -5, 4)

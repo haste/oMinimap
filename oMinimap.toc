@@ -4,4 +4,4 @@
 ## X-eMail: troeks@gmail.com
 ## Notes: Yet another square minimap.
 
-core\minimap.lua
+minimap.lua
