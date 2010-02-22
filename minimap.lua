@@ -20,7 +20,7 @@ MinimapCluster:SetUserPlaced(true)
 
 -- Frame fluff
 local event = function(self)
-	MinimapZoneText:SetFont(STANDARD_TEXT_FONT, 12,"OUTLINE")
+	MinimapZoneText:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
 	MinimapZoneText:SetDrawLayer"OVERLAY"
 
 	Minimap:SetScript("OnMouseDown", function(self)
@@ -66,7 +66,6 @@ local event = function(self)
 	MinimapNorthTag:Hide()
 	MinimapNorthTag.Show = dummy
 
-	Minimap:SetBlipTexture[[Interface\AddOns\oMinimap\textures\chiiblip]]
 	Minimap:SetMaskTexture[[Interface\ChatFrame\ChatFrameBackground]]
 
 	self:ClearAllPoints()
