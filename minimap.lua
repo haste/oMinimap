@@ -52,10 +52,10 @@ local event = function(self)
 	MiniMapTracking:ClearAllPoints()
 	MiniMapTracking:SetPoint"TOPLEFT"
 
-	MiniMapBattlefieldBorder:Hide()
-	MiniMapBattlefieldFrame:SetParent(Minimap)
-	MiniMapBattlefieldFrame:ClearAllPoints()
-	MiniMapBattlefieldFrame:SetPoint("TOPRIGHT", 0, -3)
+	QueueStatusMinimapButton:Hide()
+	QueueStatusMinimapButton:SetParent(Minimap)
+	QueueStatusMinimapButton:ClearAllPoints()
+	QueueStatusMinimapButton:SetPoint("TOPRIGHT", 0, -3)
 
 	MiniMapMailBorder:Hide()
 	MiniMapMailFrame:SetParent(Minimap)
